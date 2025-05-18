@@ -63,40 +63,79 @@ def tech_indicators():
     st.header('Technical Indicators')
     option = st.radio('Choose a Technical Indicator to Visualize', ['Close', 'BB', 'MACD', 'RSI', 'SMA', 'EMA'])
 
-    # Bollinger bands
-    bb_indicator = BollingerBands(close=data['Close'])
-    bb = data.copy()
-    bb['bb_h'] = bb_indicator.bollinger_hband()
-    bb['bb_l'] = bb_indicator.bollinger_lband()
-    # Creating a new dataframe
-    bb = bb[['Close', 'bb_h', 'bb_l']]
-    # MACD
-    macd = MACD(data.Close).macd()
-    # RSI
-    rsi = RSIIndicator(data.Close).rsi()
-    # SMA
-    sma = SMAIndicator(data.Close, window=14).sma_indicator()
-    # EMA
-    ema = EMAIndicator(data.Close).ema_indicator()
+    if data is None or data.empty or len(data) < 20:
+        st.error("Not enough data to compute technical indicators. Please choose a longer duration or a different stock.")
+        return
 
+    try:
+        # Bollinger Bands
+        bb_indicator = BollingerBands(close=data['Close'])
+        bb = data.copy()
+        bb['bb_h'] = bb_indicator.bollinger_hband()
+        bb['bb_l'] = bb_indicator.bollinger_lband()
+        bb = bb[['Close', 'bb_h', 'bb_l']]
+    except Exception as e:
+        st.warning(f"Error calculating Bollinger Bands: {e}")
+        bb = None
+
+    try:
+        macd = MACD(close=data['Close']).macd()
+    except Exception as e:
+        st.warning(f"Error calculating MACD: {e}")
+        macd = None
+
+    try:
+        rsi = RSIIndicator(close=data['Close']).rsi()
+    except Exception as e:
+        st.warning(f"Error calculating RSI: {e}")
+        rsi = None
+
+    try:
+        sma = SMAIndicator(close=data['Close'], window=14).sma_indicator()
+    except Exception as e:
+        st.warning(f"Error calculating SMA: {e}")
+        sma = None
+
+    try:
+        ema = EMAIndicator(close=data['Close']).ema_indicator()
+    except Exception as e:
+        st.warning(f"Error calculating EMA: {e}")
+        ema = None
+
+    # Display based on user selection
     if option == 'Close':
         st.write('Close Price')
-        st.line_chart(data.Close)
+        st.line_chart(data['Close'])
     elif option == 'BB':
-        st.write('BollingerBands')
-        st.line_chart(bb)
+        if bb is not None:
+            st.write('Bollinger Bands')
+            st.line_chart(bb)
+        else:
+            st.error("Bollinger Bands could not be calculated.")
     elif option == 'MACD':
-        st.write('Moving Average Convergence Divergence')
-        st.line_chart(macd)
+        if macd is not None:
+            st.write('MACD')
+            st.line_chart(macd)
+        else:
+            st.error("MACD could not be calculated.")
     elif option == 'RSI':
-        st.write('Relative Strength Indicator')
-        st.line_chart(rsi)
+        if rsi is not None:
+            st.write('RSI')
+            st.line_chart(rsi)
+        else:
+            st.error("RSI could not be calculated.")
     elif option == 'SMA':
-        st.write('Simple Moving Average')
-        st.line_chart(sma)
-    else:
-        st.write('Expoenetial Moving Average')
-        st.line_chart(ema)
+        if sma is not None:
+            st.write('Simple Moving Average')
+            st.line_chart(sma)
+        else:
+            st.error("SMA could not be calculated.")
+    elif option == 'EMA':
+        if ema is not None:
+            st.write('Exponential Moving Average')
+            st.line_chart(ema)
+        else:
+            st.error("EMA could not be calculated.")
 
 
 def dataframe():
