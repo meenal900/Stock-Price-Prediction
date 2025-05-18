@@ -64,7 +64,7 @@ def tech_indicators():
     option = st.radio('Choose a Technical Indicator to Visualize', ['Close', 'BB', 'MACD', 'RSI', 'SMA', 'EMA'])
 
     # Bollinger bands
-    bb_indicator = BollingerBands(data.Close)
+    bb_indicator = BollingerBands(close=data['Close'])
     bb = data
     bb['bb_h'] = bb_indicator.bollinger_hband()
     bb['bb_l'] = bb_indicator.bollinger_lband()
