@@ -15,7 +15,7 @@ from sklearn.ensemble import RandomForestRegressor, ExtraTreesRegressor
 from sklearn.metrics import r2_score, mean_absolute_error
 
 st.title('Stock Price Predictions')
-st.sidebar.info('Welcome to the Stock Price Prediction App. Choose your options below')
+st.sidebar.info('Welcome to the Meen's Stock Price Prediction App. Choose your options below')
 st.sidebar.info("Created and designed by [Meenal Saini](https://www.linkedin.com/in/meenal-saini-50b320227/)")
 
 @st.cache_data
