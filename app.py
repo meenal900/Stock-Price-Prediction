@@ -48,8 +48,8 @@ start_date = st.sidebar.date_input('Start Date', value=before)
 end_date = st.sidebar.date_input('End date', today)
 if st.sidebar.button('Send'):
     if start_date < end_date:
-        st.sidebar.success('Start date: `%s`\n\nEnd date: `%s`' %(start_date, end_date))
-        download_data(option, start_date, end_date)
+        st.sidebar.success(f'Start date: `{start_date}`\n\nEnd date: `{end_date}`')
+        _ = download_data(option, start_date, end_date)  # prevents displaying weird object
     else:
         st.sidebar.error('Error: End date must fall after start date')
 
