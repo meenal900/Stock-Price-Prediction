@@ -37,7 +37,12 @@ def main():
         st.sidebar.error('Error: End date must fall after start date')
         return
 
-    data = download_data(ticker, start_date, end_date)
+    # Auto-add '.NS' for Indian stocks if not already present
+    if not option.endswith(".NS") and len(option) <= 5:
+        option += ".NS"
+
+    data = download_data(option, start_date, end_date)
+
 
     if data.empty:
         st.warning(f"No data found for '{ticker}' between {start_date} and {end_date}. Please try a different ticker or date range.")
@@ -61,7 +66,8 @@ def tech_indicators(data):
     data = data.fillna(method='ffill')
 
     try:
-        bb_indicator = BollingerBands(close=data['Close'], window=20, window_dev=2)
+        close_prices = data['Close'].squeeze()  # ensures it's a Series
+        bb_indicator = BollingerBands(close=close_prices, window=20, window_dev=2)
         bb = pd.DataFrame({
             'Close': data['Close'],
             'bb_h': bb_indicator.bollinger_hband(),
