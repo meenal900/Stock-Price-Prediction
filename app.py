@@ -65,7 +65,7 @@ def tech_indicators():
 
     # Bollinger bands
     bb_indicator = BollingerBands(close=data['Close'])
-    bb = data
+    bb = data.copy()
     bb['bb_h'] = bb_indicator.bollinger_hband()
     bb['bb_l'] = bb_indicator.bollinger_lband()
     # Creating a new dataframe
